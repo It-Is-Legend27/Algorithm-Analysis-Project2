@@ -6,8 +6,6 @@
 #include "sorts.hpp"
 using namespace std;
 
-const int ARR_SIZE = 10;
-
 string array_to_string(int arr[], int n)
 {
     string repr = "";
@@ -31,9 +29,14 @@ int main()
     // Seeding random number generator
     srand(time(NULL));
 
+    const int ARR_SIZE = 10;
+
     int *S1 = new int[ARR_SIZE]; // Insertion Sort array
+
     int *S2 = new int[ARR_SIZE]; // Selection Sort array
+
     int *S3 = new int[ARR_SIZE]; // Merge Sort array
+
     int *S4 = new int[ARR_SIZE]; // Quick Sort array
 
     long time1;
@@ -77,13 +80,13 @@ int main()
         time2 = duration.count();
 
         start_time = chrono::high_resolution_clock::now();
-        mergeSort(S3, 0, ARR_SIZE);
+        mergeSort(S3, 0, ARR_SIZE-1);
         end_time = chrono::high_resolution_clock::now();
         duration = chrono::duration_cast<chrono::nanoseconds>(end_time - start_time);
         time3 = duration.count();
 
         start_time = chrono::high_resolution_clock::now();
-        quickSort(S4, 0, ARR_SIZE);
+        quickSort(S4, 0, ARR_SIZE-1);
         end_time = chrono::high_resolution_clock::now();
         duration = chrono::duration_cast<chrono::nanoseconds>(end_time - start_time);
         time4 = duration.count();
@@ -92,25 +95,25 @@ int main()
         cout << string(40, '*') << "\n";
 
         cout << "Selection Sort: ";
-        //cout << array_to_string(S1, ARR_SIZE);
+        cout << array_to_string(S1, ARR_SIZE);
         cout << "\n";
         cout << "Counter: " << c1 << "\n";
         cout << "Time: " << time1 << "\n\n";
 
         cout << "Insertion Sort: ";
-        //cout << array_to_string(S2, ARR_SIZE);
+        cout << array_to_string(S2, ARR_SIZE);
         cout << "\n";
         cout << "Counter: " << c2 << "\n";
         cout << "Time: " << time2 << "\n\n";
 
         cout << "Merge Sort:     ";
-        //cout << array_to_string(S3, ARR_SIZE);
+        cout << array_to_string(S3, ARR_SIZE);
         cout << "\n";
         cout << "Counter: " << c3 << "\n";
         cout << "Time: " << time3 << "\n\n";
 
         cout << "Quick Sort:     ";
-        //cout << array_to_string(S4, ARR_SIZE);
+        cout << array_to_string(S4, ARR_SIZE);
         cout << "\n";
         cout << "Counter: " << c4 << "\n";
         cout << "Time: " << time4 << "\n\n";
@@ -118,7 +121,7 @@ int main()
         cout << string(40, '*') << "\n";
         cout << "\n";
     }
-
+    
     // Free memory
     delete[] S1;
     delete[] S2;
