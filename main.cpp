@@ -24,29 +24,35 @@ int main()
     const int arr_size = 1000;
     const int num_runs = 10;
 
-    // Output file
-    string outfile_name = "arr_size_" + to_string(arr_size) + ".csv";
-    ofstream outfile(outfile_name);
+    // Output files
+    string timefile_name = "time_size_" + to_string(arr_size) + ".csv";
+    ofstream timefile(timefile_name);
+    string counterfile_name = "counter_size_" + to_string(arr_size) + ".csv";
+    ofstream counterfile(counterfile_name);
 
     // Writing headers for CSV file
-    outfile << "run_id"
-            << ","
-            << "insertion_sort_counter"
-            << ","
-            << "insertion_sort_time(ns)"
-            << ","
-            << "selection_sort_counter"
-            << ","
-            << "selection_sort_time(ns)"
-            << ","
-            << "merge_sort_counter"
-            << ","
-            << "merge_sort_time(ns)"
-            << ","
-            << "quick_sort_counter"
-            << ","
-            << "quick_sort_time(ns)"
-            << '\n';
+    timefile << "run_id"
+             << ","
+             << "insertion_sort_time(ns)"
+             << ","
+             << "selection_sort_time(ns)"
+             << ","
+             << "merge_sort_time(ns)"
+             << ","
+             << "quick_sort_time(ns)"
+             << '\n';
+
+    // Writing headers for CSV file
+    counterfile << "run_id"
+                << ","
+                << "insertion_sort_counter"
+                << ","
+                << "selection_sort_counter"
+                << ","
+                << "merge_sort_counter"
+                << ","
+                << "quick_sort_counter"
+                << '\n';
 
     int *I = new int[arr_size]; // Insertion Sort array
 
@@ -136,25 +142,27 @@ int main()
         // cout << string(40, '*') << "\n";
         // cout << "\n";
 
-        outfile << run_id
-            << ","
-            << cI
-            << ","
-            << timeI
-            << ","
-            << cS
-            << ","
-            << timeS
-            << ","
-            << cM
-            << ","
-            << timeM
-            << ","
-            << cQ
-            << ","
-            << timeQ
-            << '\n';
-        
+        timefile << run_id
+                 << ","
+                 << timeI
+                 << ","
+                 << timeS
+                 << ","
+                 << timeM
+                 << ","
+                 << timeQ
+                 << '\n';
+
+        counterfile << run_id
+                    << ","
+                    << cI
+                    << ","
+                    << cS
+                    << ","
+                    << cM
+                    << ","
+                    << cQ
+                    << '\n';
     }
 
     // Free memory
@@ -163,8 +171,9 @@ int main()
     delete[] M;
     delete[] Q;
 
-    // Close output file
-    outfile.close();
+    // Close output files
+    timefile.close();
+    counterfile.close();
 
     return 0;
 }
