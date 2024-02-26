@@ -3,8 +3,171 @@
 #include <ctime>
 #include <string>
 #include <chrono>
+#include <fstream>
 #include "sorts.hpp"
 using namespace std;
+
+/**
+ * @brief Returns string representation of an array.
+ *
+ * @param arr Array of int
+ * @param n Size of array
+ * @return string - String representation of the array
+ */
+string array_to_string(int arr[], int n);
+
+int main()
+{
+    // Seeding random number generator
+    srand(time(NULL));
+
+    const int arr_size = 1000;
+    const int num_runs = 10;
+
+    // Output file
+    string outfile_name = "arr_size_" + to_string(arr_size) + ".csv";
+    ofstream outfile(outfile_name);
+
+    // Writing headers for CSV file
+    outfile << "run_id"
+            << ","
+            << "insertion_sort_counter"
+            << ","
+            << "insertion_sort_time(ns)"
+            << ","
+            << "selection_sort_counter"
+            << ","
+            << "selection_sort_time(ns)"
+            << ","
+            << "merge_sort_counter"
+            << ","
+            << "merge_sort_time(ns)"
+            << ","
+            << "quick_sort_counter"
+            << ","
+            << "quick_sort_time(ns)"
+            << '\n';
+
+    int *I = new int[arr_size]; // Insertion Sort array
+
+    int *S = new int[arr_size]; // Selection Sort array
+
+    int *M = new int[arr_size]; // Merge Sort array
+
+    int *Q = new int[arr_size]; // Quick Sort array
+
+    long timeI;
+    long timeS;
+    long timeM;
+    long timeQ;
+
+    long cI; // Counter for Insertion Sort
+    long cS; // Counter for Selection Sort
+    long cM; // Counter for Merge Sort
+    long cQ; // Counter for Quick Sort
+
+    // Averaging results over 10 runs
+    for (int run_id = 1; run_id <= num_runs; run_id++)
+    {
+        cI = cS = cM = cQ = 0;             // Intialize counters to 0
+        timeI = timeS = timeM = timeQ = 0; // Intialize times to 0
+
+        // Intializing arrays
+        for (int i = 0; i < arr_size; i++)
+        {
+            int x = rand();
+            I[i] = x;
+            S[i] = x;
+            M[i] = x;
+            Q[i] = x;
+        }
+
+        auto start_time = chrono::high_resolution_clock::now();
+        cI = insertion_sort(I, arr_size);
+        auto end_time = chrono::high_resolution_clock::now();
+        auto duration = chrono::duration_cast<chrono::nanoseconds>(end_time - start_time);
+        timeI = duration.count();
+
+        start_time = chrono::high_resolution_clock::now();
+        cS = selectionSort(S, arr_size);
+        end_time = chrono::high_resolution_clock::now();
+        duration = chrono::duration_cast<chrono::nanoseconds>(end_time - start_time);
+        timeS = duration.count();
+
+        start_time = chrono::high_resolution_clock::now();
+        mergeSort(M, 0, arr_size - 1);
+        end_time = chrono::high_resolution_clock::now();
+        duration = chrono::duration_cast<chrono::nanoseconds>(end_time - start_time);
+        timeM = duration.count();
+
+        start_time = chrono::high_resolution_clock::now();
+        quickSort(Q, 0, arr_size - 1);
+        end_time = chrono::high_resolution_clock::now();
+        duration = chrono::duration_cast<chrono::nanoseconds>(end_time - start_time);
+        timeQ = duration.count();
+
+        // cout << "Run " << run_id << "\n";
+        // cout << string(40, '*') << "\n";
+
+        // cout << "Insertion Sort: ";
+        // cout << array_to_string(I, arr_size);
+        // cout << "\n";
+        // cout << "Counter: " << cI << "\n";
+        // cout << "Time:    " << timeI << " ns\n\n";
+
+        // cout << "Selection Sort: ";
+        // cout << array_to_string(S, arr_size);
+        // cout << "\n";
+        // cout << "Counter: " << cS << "\n";
+        // cout << "Time:    " << timeS << " ns\n\n";
+
+        // cout << "Merge Sort:     ";
+        // cout << array_to_string(M, arr_size);
+        // cout << "\n";
+        // cout << "Counter: " << cM << "\n";
+        // cout << "Time:    " << timeM << " ns\n\n";
+
+        // cout << "Quick Sort:     ";
+        // cout << array_to_string(Q, arr_size);
+        // cout << "\n";
+        // cout << "Counter: " << cQ << "\n";
+        // cout << "Time:    " << timeQ << " ns\n\n";
+
+        // cout << string(40, '*') << "\n";
+        // cout << "\n";
+
+        outfile << run_id
+            << ","
+            << cI
+            << ","
+            << timeI
+            << ","
+            << cS
+            << ","
+            << timeS
+            << ","
+            << cM
+            << ","
+            << timeM
+            << ","
+            << cQ
+            << ","
+            << timeQ
+            << '\n';
+        
+    }
+
+    // Free memory
+    delete[] I;
+    delete[] S;
+    delete[] M;
+    delete[] Q;
+
+    // Close output file
+    outfile.close();
+
+    return 0;
+}
 
 string array_to_string(int arr[], int n)
 {
@@ -22,111 +185,4 @@ string array_to_string(int arr[], int n)
 
     repr += "]";
     return repr;
-}
-
-int main()
-{
-    // Seeding random number generator
-    srand(time(NULL));
-
-    const int ARR_SIZE = 10;
-
-    int *S1 = new int[ARR_SIZE]; // Insertion Sort array
-
-    int *S2 = new int[ARR_SIZE]; // Selection Sort array
-
-    int *S3 = new int[ARR_SIZE]; // Merge Sort array
-
-    int *S4 = new int[ARR_SIZE]; // Quick Sort array
-
-    long time1;
-    long time2;
-    long time3;
-    long time4;
-
-    int c1; // Counter for Insertion Sort
-    int c2; // Counter for Selection Sort
-    int c3; // Counter for Merge Sort
-    int c4; // Counter for Quick Sort
-
-    
-
-    // Averaging results over 10 runs
-    for (int runID = 1; runID <= 1; runID++)
-    {
-        c1 = c2 = c3 = c4 = 0; // Intialize counters to 0
-        time1 = time2 = time3 = time4 = 0; // Intialize times to 0
-
-        // Intializing arrays
-        for (int i = 0; i < ARR_SIZE; i++)
-        {
-            int x = rand();
-            S1[i] = x;
-            S2[i] = x;
-            S3[i] = x;
-            S4[i] = x;
-        }
-
-        auto start_time = chrono::high_resolution_clock::now();
-        c1 = insertion_sort(S1, ARR_SIZE);
-        auto end_time = chrono::high_resolution_clock::now();
-        auto duration = chrono::duration_cast<chrono::nanoseconds>(end_time - start_time);
-        time1 = duration.count();
-
-        start_time = chrono::high_resolution_clock::now();
-        c2 = selectionSort(S2, ARR_SIZE);
-        end_time = chrono::high_resolution_clock::now();
-        duration = chrono::duration_cast<chrono::nanoseconds>(end_time - start_time);
-        time2 = duration.count();
-
-        start_time = chrono::high_resolution_clock::now();
-        mergeSort(S3, 0, ARR_SIZE-1);
-        end_time = chrono::high_resolution_clock::now();
-        duration = chrono::duration_cast<chrono::nanoseconds>(end_time - start_time);
-        time3 = duration.count();
-
-        start_time = chrono::high_resolution_clock::now();
-        quickSort(S4, 0, ARR_SIZE-1);
-        end_time = chrono::high_resolution_clock::now();
-        duration = chrono::duration_cast<chrono::nanoseconds>(end_time - start_time);
-        time4 = duration.count();
-
-        cout << "Run " << runID << "\n";
-        cout << string(40, '*') << "\n";
-
-        cout << "Selection Sort: ";
-        cout << array_to_string(S1, ARR_SIZE);
-        cout << "\n";
-        cout << "Counter: " << c1 << "\n";
-        cout << "Time: " << time1 << "\n\n";
-
-        cout << "Insertion Sort: ";
-        cout << array_to_string(S2, ARR_SIZE);
-        cout << "\n";
-        cout << "Counter: " << c2 << "\n";
-        cout << "Time: " << time2 << "\n\n";
-
-        cout << "Merge Sort:     ";
-        cout << array_to_string(S3, ARR_SIZE);
-        cout << "\n";
-        cout << "Counter: " << c3 << "\n";
-        cout << "Time: " << time3 << "\n\n";
-
-        cout << "Quick Sort:     ";
-        cout << array_to_string(S4, ARR_SIZE);
-        cout << "\n";
-        cout << "Counter: " << c4 << "\n";
-        cout << "Time: " << time4 << "\n\n";
-        
-        cout << string(40, '*') << "\n";
-        cout << "\n";
-    }
-    
-    // Free memory
-    delete[] S1;
-    delete[] S2;
-    delete[] S3;
-    delete[] S4;
-
-    return 0;
 }
