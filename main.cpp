@@ -171,9 +171,6 @@ int main()
         }
 
         // Computing averages for time
-        // cout << fixed << avg_insertion_time << '\n';
-        // cout << num_runs << '\n';
-        // cout << (avg_insertion_time / num_runs) << '\n';
         avg_insertion_time /= num_runs;
         avg_selection_time /= num_runs;
         avg_merge_time /= num_runs;
@@ -185,7 +182,7 @@ int main()
         avg_merge_counter /= num_runs;
         avg_quick_counter /= num_runs;
 
-        // Print averages to file
+        // Print averages for time to file
         timefile << fixed << arr_size
                  << ","
                  << avg_insertion_time
@@ -197,6 +194,7 @@ int main()
                  << avg_quick_time
                  << '\n';
 
+        // Print averages for counters to file
         counterfile << fixed << arr_size
                     << ","
                     << avg_insertion_counter
