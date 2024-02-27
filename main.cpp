@@ -20,164 +20,200 @@ int main()
 {
     // Seeding random number generator
     srand(time(NULL));
-
-    const int arr_size = 10;
     const int num_runs = 10;
 
     // Output files
-    string timefile_name = "time_size_" + to_string(arr_size) + ".csv";
+    string timefile_name = "time_.csv";
     ofstream timefile(timefile_name);
-    string counterfile_name = "counter_size_" + to_string(arr_size) + ".csv";
+    string counterfile_name = "counter_.csv";
     ofstream counterfile(counterfile_name);
 
     // Writing headers for CSV file
-    timefile << "run_id"
+    timefile << "arr_sz"
              << ","
-             << "insertion_sort_time(ns)"
+             << "avg_insertion_sort_time(ns)"
              << ","
-             << "selection_sort_time(ns)"
+             << "avg_selection_sort_time(ns)"
              << ","
-             << "merge_sort_time(ns)"
+             << "avg_merge_sort_time(ns)"
              << ","
-             << "quick_sort_time(ns)"
+             << "avg_quick_sort_time(ns)"
              << '\n';
 
     // Writing headers for CSV file
-    counterfile << "run_id"
+    counterfile << "arr_sz"
                 << ","
-                << "insertion_sort_counter"
+                << "avg_insertion_sort_counter"
                 << ","
-                << "selection_sort_counter"
+                << "avg_selection_sort_counter"
                 << ","
-                << "merge_sort_counter"
+                << "avg_merge_sort_counter"
                 << ","
-                << "quick_sort_counter"
+                << "avg_quick_sort_counter"
                 << '\n';
 
-
-    
-    int *I = new int[arr_size]; // Insertion Sort array
-
-    int *S = new int[arr_size]; // Selection Sort array
-
-    int *M = new int[arr_size]; // Merge Sort array
-
-    int *Q = new int[arr_size]; // Quick Sort array
-
-    long timeI; // Elapsed time for Insertion Sort
-    long timeS; // Elapsed time for Selection Sort
-    long timeM; // Elapsed time for Merge Sort
-    long timeQ; // Elapsed time for Quick Sort
-
-    long cI; // Counter for Insertion Sort
-    long cS; // Counter for Selection Sort
-    long cM; // Counter for Merge Sort
-    long cQ; // Counter for Quick Sort
-
-    
-    // Averaging results over 10 runs
-    for (int run_id = 1; run_id <= num_runs; run_id++)
+    for (int arr_size = 1000; arr_size <= 7000; arr_size += 1000)
     {
-        cI = cS = cM = cQ = globalCM = globalCQ = 0;             // Intialize counters to 0
-        timeI = timeS = timeM = timeQ = 0; // Intialize times to 0
+        // Arrays of size arr_size for each sorting algorithm
+        int *insertion_arr = new int[arr_size];
+        int *selection_arr = new int[arr_size];
+        int *merge_arr = new int[arr_size];
+        int *quick_arr = new int[arr_size];
 
-        // Intializing arrays
-        for (int i = 0; i < arr_size; i++)
+        // Elapsed time for each sorting algorithm
+        long insertion_time;
+        long selection_time;
+        long merge_time;
+        long quick_time;
+
+        // Counters for each sorting algorithm
+        long insertion_counter;
+        long selection_counter;
+        long merge_counter;
+        long quick_counter;
+
+        // Average elapsed time for each sorting algorithm
+        double avg_insertion_time = 0;
+        double avg_selection_time = 0;
+        double avg_merge_time = 0;
+        double avg_quick_time = 0;
+
+        // Average value of the counter for each sorting algorithm
+        double avg_insertion_counter = 0;
+        double avg_selection_counter = 0;
+        double avg_merge_counter = 0;
+        double avg_quick_counter = 0;
+
+        // Averaging results over 10 runs
+        for (int run_id = 1; run_id <= num_runs; run_id++)
         {
-            int x = rand() % 100;
-            I[i] = x;
-            S[i] = x;
-            M[i] = x;
-            Q[i] = x;
+            insertion_counter = selection_counter = merge_counter = quick_counter = globalCM = globalCQ = 0; // Intialize counters to 0
+            insertion_time = selection_time = merge_time = quick_time = 0;                                   // Intialize times to 0
+
+            // Intializing arrays
+            for (int i = 0; i < arr_size; i++)
+            {
+                int x = rand() % 100;
+                insertion_arr[i] = x;
+                selection_arr[i] = x;
+                merge_arr[i] = x;
+                quick_arr[i] = x;
+            }
+
+            // Timing sorts and getting the counters
+            auto start_time = chrono::high_resolution_clock::now();
+            insertion_counter = insertion_sort(insertion_arr, arr_size);
+            auto end_time = chrono::high_resolution_clock::now();
+            auto duration = chrono::duration_cast<chrono::nanoseconds>(end_time - start_time);
+            insertion_time = duration.count();
+
+            start_time = chrono::high_resolution_clock::now();
+            selection_counter = selectionSort(selection_arr, arr_size);
+            end_time = chrono::high_resolution_clock::now();
+            duration = chrono::duration_cast<chrono::nanoseconds>(end_time - start_time);
+            selection_time = duration.count();
+
+            start_time = chrono::high_resolution_clock::now();
+            mergeSort(merge_arr, 0, arr_size - 1);
+            merge_counter = globalCM;
+            end_time = chrono::high_resolution_clock::now();
+            duration = chrono::duration_cast<chrono::nanoseconds>(end_time - start_time);
+            merge_time = duration.count();
+
+            start_time = chrono::high_resolution_clock::now();
+            quickSort(quick_arr, 0, arr_size - 1);
+            quick_counter = globalCQ;
+            end_time = chrono::high_resolution_clock::now();
+            duration = chrono::duration_cast<chrono::nanoseconds>(end_time - start_time);
+            quick_time = duration.count();
+
+            // Adding times to the averages for time
+            avg_insertion_time += insertion_time;
+            avg_selection_time += selection_time;
+            avg_merge_time += merge_time;
+            avg_quick_time += quick_time;
+
+            // Adding counters to the averages for counters
+            avg_insertion_counter += insertion_counter;
+            avg_selection_counter += selection_counter;
+            avg_merge_counter += merge_counter;
+            avg_quick_counter += quick_counter;
+
+            // cout << "Run " << run_id << "\n";
+            // cout << string(40, '*') << "\n";
+
+            // cout << "Insertion Sort: ";
+            // cout << array_to_string(insertion_arr, arr_size);
+            // cout << "\n";
+            // cout << "Counter: " << insertion_counter << "\n";
+            // cout << "Time:    " << insertion_time << " ns\n\n";
+
+            // cout << "Selection Sort: ";
+            // cout << array_to_string(selection_arr, arr_size);
+            // cout << "\n";
+            // cout << "Counter: " << selection_counter << "\n";
+            // cout << "Time:    " << selection_time << " ns\n\n";
+
+            // cout << "Merge Sort:     ";
+            // cout << array_to_string(merge_arr, arr_size);
+            // cout << "\n";
+            // cout << "Counter: " << merge_counter << "\n";
+            // cout << "Time:    " << merge_time << " ns\n\n";
+
+            // cout << "Quick Sort:     ";
+            // cout << array_to_string(quick_arr, arr_size);
+            // cout << "\n";
+            // cout << "Counter: " << quick_counter << "\n";
+            // cout << "Time:    " << quick_time << " ns\n\n";
+
+            // cout << string(40, '*') << "\n";
+            // cout << "\n";
         }
 
+        // Computing averages for time
+        // cout << fixed << avg_insertion_time << '\n';
+        // cout << num_runs << '\n';
+        // cout << (avg_insertion_time / num_runs) << '\n';
+        avg_insertion_time /= num_runs;
+        avg_selection_time /= num_runs;
+        avg_merge_time /= num_runs;
+        avg_quick_time /= num_runs;
 
-        // Timing sorts and getting the counters
-        auto start_time = chrono::high_resolution_clock::now();
-        cI = insertion_sort(I, arr_size);
-        auto end_time = chrono::high_resolution_clock::now();
-        auto duration = chrono::duration_cast<chrono::nanoseconds>(end_time - start_time);
-        timeI = duration.count();
+        // Computing averages for time
+        avg_insertion_counter /= num_runs;
+        avg_selection_counter /= num_runs;
+        avg_merge_counter /= num_runs;
+        avg_quick_counter /= num_runs;
 
-        start_time = chrono::high_resolution_clock::now();
-        cS = selectionSort(S, arr_size);
-        end_time = chrono::high_resolution_clock::now();
-        duration = chrono::duration_cast<chrono::nanoseconds>(end_time - start_time);
-        timeS = duration.count();
-
-        start_time = chrono::high_resolution_clock::now();
-        mergeSort(M, 0, arr_size - 1);
-        cM = globalCM;
-        end_time = chrono::high_resolution_clock::now();
-        duration = chrono::duration_cast<chrono::nanoseconds>(end_time - start_time);
-        timeM = duration.count();
-
-        start_time = chrono::high_resolution_clock::now();
-        quickSort(Q, 0, arr_size - 1);
-        cQ = globalCQ;
-        end_time = chrono::high_resolution_clock::now();
-        duration = chrono::duration_cast<chrono::nanoseconds>(end_time - start_time);
-        timeQ = duration.count();
-
-        // cout << "Run " << run_id << "\n";
-        // cout << string(40, '*') << "\n";
-
-        // cout << "Insertion Sort: ";
-        // cout << array_to_string(I, arr_size);
-        // cout << "\n";
-        // cout << "Counter: " << cI << "\n";
-        // cout << "Time:    " << timeI << " ns\n\n";
-
-        // cout << "Selection Sort: ";
-        // cout << array_to_string(S, arr_size);
-        // cout << "\n";
-        // cout << "Counter: " << cS << "\n";
-        // cout << "Time:    " << timeS << " ns\n\n";
-
-        // cout << "Merge Sort:     ";
-        // cout << array_to_string(M, arr_size);
-        // cout << "\n";
-        // cout << "Counter: " << cM << "\n";
-        // cout << "Time:    " << timeM << " ns\n\n";
-
-        // cout << "Quick Sort:     ";
-        // cout << array_to_string(Q, arr_size);
-        // cout << "\n";
-        // cout << "Counter: " << cQ << "\n";
-        // cout << "Time:    " << timeQ << " ns\n\n";
-
-        // cout << string(40, '*') << "\n";
-        // cout << "\n";
-
-        timefile << run_id
+        // Print averages to file
+        timefile << fixed << arr_size
                  << ","
-                 << timeI
+                 << avg_insertion_time
                  << ","
-                 << timeS
+                 << avg_selection_time
                  << ","
-                 << timeM
+                 << avg_merge_time
                  << ","
-                 << timeQ
+                 << avg_quick_time
                  << '\n';
 
-        counterfile << run_id
+        counterfile << fixed << arr_size
                     << ","
-                    << cI
+                    << avg_insertion_counter
                     << ","
-                    << cS
+                    << avg_selection_counter
                     << ","
-                    << cM
+                    << avg_merge_counter
                     << ","
-                    << cQ
+                    << avg_quick_counter
                     << '\n';
+
+        // Free memory
+        delete[] insertion_arr;
+        delete[] selection_arr;
+        delete[] merge_arr;
+        delete[] quick_arr;
     }
-
-    // Free memory
-    delete[] I;
-    delete[] S;
-    delete[] M;
-    delete[] Q;
-
     // Close output files
     timefile.close();
     counterfile.close();
