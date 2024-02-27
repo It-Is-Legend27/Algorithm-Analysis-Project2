@@ -21,7 +21,7 @@ int main()
     // Seeding random number generator
     srand(time(NULL));
 
-    const int arr_size = 1000;
+    const int arr_size = 10;
     const int num_runs = 10;
 
     // Output files
@@ -54,6 +54,8 @@ int main()
                 << "quick_sort_counter"
                 << '\n';
 
+
+    
     int *I = new int[arr_size]; // Insertion Sort array
 
     int *S = new int[arr_size]; // Selection Sort array
@@ -62,32 +64,35 @@ int main()
 
     int *Q = new int[arr_size]; // Quick Sort array
 
-    long timeI;
-    long timeS;
-    long timeM;
-    long timeQ;
+    long timeI; // Elapsed time for Insertion Sort
+    long timeS; // Elapsed time for Selection Sort
+    long timeM; // Elapsed time for Merge Sort
+    long timeQ; // Elapsed time for Quick Sort
 
     long cI; // Counter for Insertion Sort
     long cS; // Counter for Selection Sort
     long cM; // Counter for Merge Sort
     long cQ; // Counter for Quick Sort
 
+    
     // Averaging results over 10 runs
     for (int run_id = 1; run_id <= num_runs; run_id++)
     {
-        cI = cS = cM = cQ = 0;             // Intialize counters to 0
+        cI = cS = cM = cQ = globalCM = globalCQ = 0;             // Intialize counters to 0
         timeI = timeS = timeM = timeQ = 0; // Intialize times to 0
 
         // Intializing arrays
         for (int i = 0; i < arr_size; i++)
         {
-            int x = rand();
+            int x = rand() % 100;
             I[i] = x;
             S[i] = x;
             M[i] = x;
             Q[i] = x;
         }
 
+
+        // Timing sorts and getting the counters
         auto start_time = chrono::high_resolution_clock::now();
         cI = insertion_sort(I, arr_size);
         auto end_time = chrono::high_resolution_clock::now();
@@ -102,12 +107,14 @@ int main()
 
         start_time = chrono::high_resolution_clock::now();
         mergeSort(M, 0, arr_size - 1);
+        cM = globalCM;
         end_time = chrono::high_resolution_clock::now();
         duration = chrono::duration_cast<chrono::nanoseconds>(end_time - start_time);
         timeM = duration.count();
 
         start_time = chrono::high_resolution_clock::now();
         quickSort(Q, 0, arr_size - 1);
+        cQ = globalCQ;
         end_time = chrono::high_resolution_clock::now();
         duration = chrono::duration_cast<chrono::nanoseconds>(end_time - start_time);
         timeQ = duration.count();

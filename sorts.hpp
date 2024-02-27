@@ -4,6 +4,9 @@
 #include <algorithm> // For swap function
 using namespace std;
 
+long globalCQ = 0;
+long globalCM = 0;
+
 /**
  * @brief Performs insertion sort on an unsorted array of integers.
  * Source: https://www.geeksforgeeks.org/insertion-sort/
@@ -144,6 +147,8 @@ void mergeSort(int array[], int const begin, int const end)
     if (begin >= end)
         return;
 
+    globalCM++; // Increment global counter
+
     int mid = begin + (end - begin) / 2;
     mergeSort(array, begin, mid);
     mergeSort(array, mid + 1, end);
@@ -181,6 +186,8 @@ void quickSort(int arr[], int low, int high)
     // when low is less than high
     if (low < high)
     {
+        globalCQ++; // Increment global counter
+        
         // pi is the partition return index of pivot
 
         int pi = partition(arr, low, high);
