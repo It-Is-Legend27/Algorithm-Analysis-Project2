@@ -1,11 +1,17 @@
 #ifndef PROJECT2_SORTS
 #define PROJECT2_SORTS
+// CMPS-5243-270: Algorithm Analysis
+// 02/28/24
+// Angel Badillo
+// Kolten Pulliam
+// Garrett Mathers
 #include <iostream>
 #include <algorithm> // For swap function
 using namespace std;
 
-long globalCQ = 0;
-long globalCM = 0;
+// Global variables for counters for recursive sorts
+long global_quick_counter = 0;
+long global_merge_counter = 0;
 
 /**
  * @brief Performs insertion sort on an unsorted array of integers.
@@ -79,10 +85,14 @@ int selectionSort(int arr[], int n)
     return comp_counter;
 }
 
-// Merges two subarrays of array[].
-// First subarray is arr[begin..mid]
-// Second subarray is arr[mid+1..end]
-// Source: https://www.geeksforgeeks.org/merge-sort/
+/**
+ * @brief Merges two subarrays created in merge sort.
+ * Source: https://www.geeksforgeeks.org/merge-sort/
+ * @param array Array of int
+ * @param left Left most index
+ * @param mid Middle index
+ * @param right Rightmost index
+ */
 void merge(int array[], int const left, int const mid,
            int const right)
 {
@@ -139,15 +149,19 @@ void merge(int array[], int const left, int const mid,
     delete[] rightArray;
 }
 
-// begin is for left index and end is right index
-// of the sub-array of arr to be sorted
-// Source: https://www.geeksforgeeks.org/merge-sort/
+/**
+ * @brief Performs merge sort on an unsorted array of integers.
+ * Source: https://www.geeksforgeeks.org/merge-sort/
+ * @param array Array of int
+ * @param begin Leftmost index
+ * @param end Rightmost index
+ */
 void mergeSort(int array[], int const begin, int const end)
 {
+    global_merge_counter++; // Increment global counter
+
     if (begin >= end)
         return;
-
-    globalCM++; // Increment global counter
 
     int mid = begin + (end - begin) / 2;
     mergeSort(array, begin, mid);
@@ -155,7 +169,14 @@ void mergeSort(int array[], int const begin, int const end)
     merge(array, begin, mid, end);
 }
 
-// Source: https://www.geeksforgeeks.org/quick-sort/
+/**
+ * @brief Partions the array and returns the index of the pivot.
+ * Source: https://www.geeksforgeeks.org/quick-sort/
+ * @param arr Array of int
+ * @param low Leftmost index
+ * @param high Rightmost index
+ * @return int - index of pivot
+ */
 int partition(int arr[], int low, int high)
 {
     // choose the pivot
@@ -179,15 +200,20 @@ int partition(int arr[], int low, int high)
     return (i + 1);
 }
 
-// The Quicksort function Implement
-// Source: https://www.geeksforgeeks.org/quick-sort/
+/**
+ * @brief Performs quick sort on an unordered array of integers.
+ * Source: https://www.geeksforgeeks.org/quick-sort/
+ * @param arr Array of int
+ * @param low Leftmost index
+ * @param high Rightmost index
+ */
 void quickSort(int arr[], int low, int high)
 {
+    global_quick_counter++; // Increment global counter
+
     // when low is less than high
     if (low < high)
     {
-        globalCQ++; // Increment global counter
-        
         // pi is the partition return index of pivot
 
         int pi = partition(arr, low, high);
