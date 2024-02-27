@@ -44,13 +44,13 @@ int main()
     // Writing headers for CSV file
     avg_timefile << "arr_sz"
                  << ","
-                 << "avg_insertion_sort_time(ns)"
+                 << "avg_insertion_sort_time(microsec)"
                  << ","
-                 << "avg_selection_sort_time(ns)"
+                 << "avg_selection_sort_time(microsec)"
                  << ","
-                 << "avg_merge_sort_time(ns)"
+                 << "avg_merge_sort_time(microsec)"
                  << ","
-                 << "avg_quick_sort_time(ns)"
+                 << "avg_quick_sort_time(microsec)"
                  << '\n';
 
     avg_counterfile << "arr_sz"
@@ -68,13 +68,13 @@ int main()
                   << ","
                   << "run_ID"
                   << ","
-                  << "insertion_sort_time(ns)"
+                  << "insertion_sort_time(microsec)"
                   << ","
-                  << "selection_sort_time(ns)"
+                  << "selection_sort_time(microsec)"
                   << ","
-                  << "merge_sort_time(ns)"
+                  << "merge_sort_time(microsec)"
                   << ","
-                  << "quick_sort_time(ns)"
+                  << "quick_sort_time(microsec)"
                   << '\n';
 
     all_countersfile << "arr_sz"
@@ -143,27 +143,27 @@ int main()
             auto start_time = chrono::high_resolution_clock::now();
             insertion_counter = insertion_sort(insertion_arr, arr_size);
             auto end_time = chrono::high_resolution_clock::now();
-            auto duration = chrono::duration_cast<chrono::nanoseconds>(end_time - start_time);
+            auto duration = chrono::duration_cast<chrono::microseconds>(end_time - start_time);
             insertion_time = duration.count();
 
             start_time = chrono::high_resolution_clock::now();
             selection_counter = selectionSort(selection_arr, arr_size);
             end_time = chrono::high_resolution_clock::now();
-            duration = chrono::duration_cast<chrono::nanoseconds>(end_time - start_time);
+            duration = chrono::duration_cast<chrono::microseconds>(end_time - start_time);
             selection_time = duration.count();
 
             start_time = chrono::high_resolution_clock::now();
             mergeSort(merge_arr, 0, arr_size - 1);
             merge_counter = global_merge_counter;
             end_time = chrono::high_resolution_clock::now();
-            duration = chrono::duration_cast<chrono::nanoseconds>(end_time - start_time);
+            duration = chrono::duration_cast<chrono::microseconds>(end_time - start_time);
             merge_time = duration.count();
 
             start_time = chrono::high_resolution_clock::now();
             quickSort(quick_arr, 0, arr_size - 1);
             quick_counter = global_quick_counter;
             end_time = chrono::high_resolution_clock::now();
-            duration = chrono::duration_cast<chrono::nanoseconds>(end_time - start_time);
+            duration = chrono::duration_cast<chrono::microseconds>(end_time - start_time);
             quick_time = duration.count();
 
             // Adding times to the averages for time
