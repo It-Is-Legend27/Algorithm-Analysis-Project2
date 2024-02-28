@@ -183,13 +183,13 @@ int main()
                           << ","
                           << run_id
                           << ","
-                          << avg_insertion_time
+                          << insertion_time
                           << ","
-                          << avg_selection_time
+                          << selection_time
                           << ","
-                          << avg_merge_time
+                          << merge_time
                           << ","
-                          << avg_quick_time
+                          << quick_time
                           << '\n';
 
             // Print each run for counters to file
